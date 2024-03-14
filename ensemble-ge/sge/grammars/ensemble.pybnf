@@ -1,0 +1,135 @@
+<start> ::= <ensemble_pipeline>
+
+<ensemble_pipeline> ::= <preprocessing> <ensemble>
+
+<preprocessing> ::= <imputation> | <bounding> | <binarizer> | <imputation> <bounding> | <imputation> <binarizer>
+
+<imputation> ::= preprocessing:imputer <strategy_imp>
+
+<bounding> ::= preprocessing:normalizer <norm> | preprocessing:min_max | preprocessing:max_abs | preprocessing:robust_scaler with_centering:<boolean> with_scaling:<boolean> | preprocessing:standard_scaler with_mean:<boolean> with_std:<boolean>
+
+<binarizer> ::= preprocessing:binarizer threshold:<threshold_bin>
+
+<strategy_imp> ::= strategy:mean | strategy:median | strategy:most_frequent
+
+<norm> ::= norm:l1 | norm:l2
+
+<boolean> ::= True | False
+
+<degree_1> ::= RANDINT(2,10)
+
+<value_rand_1> ::= RANDFLOAT(0.0,1.0)
+
+<tol> ::= RANDFLOAT(0.0000000001,0.1)
+
+<kernel> ::= linear | poly | rbf | sigmoid
+
+<coef0> ::= RANDFLOAT(0.0,1000.0)
+
+<n_iter> ::= 5 | 10 | 25 | 50 | 100 | 250 | 500 | 750
+
+<threshold_bin> ::= RANDFLOAT(0.000001,100)
+
+<ensemble> ::= ensemble:voting_hard <classifiers_list> | ensemble:stacking <classifiers_list>
+
+<classifiers_list> ::= <classifier> <classifier> | <classifier> <classifier> <classifiers_list> | <classifier> <classifiers_list>
+
+<classifier> ::= <strong> | <weak> | <tree_ensemble>
+
+<strong> ::= <trees> | <naive_bayes> | <svm>
+
+<trees> ::= classifier:extra_tree <criterion> <splitter> <max_depth> min_weight_fraction_leaf:<min_weight_fraction_leaf> <max_features> <max_leaf_nodes> <class_weight> | classifier:decision_tree <criterion> <splitter> <max_depth> min_weight_fraction_leaf:<min_weight_fraction_leaf> <max_features> <max_leaf_nodes> <class_weight> presort:<presort>
+
+<naive_bayes> ::= classifier:gaussian_nb | classifier:bernouli_nb alpha:<alpha> binarize:<value_rand_1> fit_prior:<boolean>| classifier:multinominal_nb alpha:<alpha> fit_prior:<boolean>
+
+<svm> ::= classifier:svc kernel:<kernel> degree:<degree_1> shrinking:<boolean> probability:<boolean> tol:<tol> <class_weight> max_iter:<max_iter>
+
+<weak> ::= <nearest> | <discriminant> | <logistic> | <passive> | <gradient_options> | <ridge>
+
+<nearest> ::= classifier:knn n_neighbors:<n_neighbors> <weights> <k_algorithm> leaf_size:<leaf_size> p:<p> <d_metric> | classifier:radius_neighbors radius:<radius> <weights> <k_algorithm> leaf_size:<leaf_size> p:<p> <d_metric> | classifier:ncentroid <d_metric> <shrinking_threshold>
+
+<discriminant> ::= classifier:lda <solver_discrim> store_covariance:<boolean> tol:<tol> | classifier:qda reg_param:<value_rand_1> store_covariance:<boolean> tol:<tol>
+
+<logistic> ::= classifier:logistic tol:<tol> fit_intercept:<boolean> <class_weight> <solver_lr_options> max_iter:<max_iter_lr> warm_start:<boolean> | classifier:logistic_cv fit_intercept:<boolean> <cv> <solver_lr_options> tol:<tol> max_iter:<max_iter_lr> <class_weight> refit:<boolean>
+
+<passive> ::= classifier:passive_aggressive fit_intercept:<boolean> tol:<tol> shuffle:<boolean> <loss_sgd> warm_start:<boolean> <class_weight> max_iter:<n_iter>
+
+<gradient_options> ::= classifier:perceptron <penalty> alpha:<alpha> fit_intercept:<boolean> tol:<tol> shuffle:<boolean> eta0:<value_rand_1> <class_weight> warm_start:<boolean> max_iter:<n_iter>
+
+<ridge> ::= classifier:ridge alpha:<alpha> fit_intercept:<boolean> normalize:<boolean> copy_X:<boolean> max_iter:<max_iter> tol:<tol> <class_weight> <solver_ridge> | classifier:ridge_cv alpha:<alpha> fit_intercept:<boolean> normalize:<boolean> <cv> <class_weight>
+
+<tree_ensemble> ::= classifier:ada n_estimators:<n_estimators> learning_rate:<learning_rate_ada> <algorithm_ada> | classifier:gradient_boosting <loss_gradient> learning_rate:<lr_gradient_boosting> n_estimators:<n_estimators> subsample:<value_rand_1> min_weight_fraction_leaf:<min_weight_fraction_leaf> <max_depth> <max_features> <max_leaf_nodes> warm_start:<boolean> presort:<presort> | classifier:random_forest <criterion> <max_depth> n_estimators:<n_estimators> min_weight_fraction_leaf:<min_weight_fraction_leaf> <max_features> <max_leaf_nodes> <bootstrap_and_oob> warm_start:<boolean> <class_weight_Trees> | classifier:extra_trees n_estimators:<n_estimators> <criterion> <max_depth> min_weight_fraction_leaf:<min_weight_fraction_leaf> <max_features> <max_leaf_nodes> <bootstrap_and_oob> warm_start:<boolean> <class_weight_Trees>
+
+<criterion> ::= criterion:entropy | criterion:gini
+
+<splitter> ::= splitter:best | splitter:random
+
+<class_weight> ::= class_weight:balanced | class_weight:None
+
+<max_features> ::= max_features:<max_features_randfloat> | max_features:sqrt | max_features:log2 | max_features:None
+
+<max_features_randfloat> ::= RANDFLOAT(0.01,1.0)
+
+<max_depth> ::= max_depth:<max_depth_randint> | max_depth:None
+
+<max_depth_randint> ::= RANDINT(1,100)
+
+<min_weight_fraction_leaf> ::= RANDFLOAT(0.0,0.5)
+
+<max_leaf_nodes> ::= max_leaf_nodes:<max_leaf_nodes_randint> | max_leaf_nodes:None
+
+<max_leaf_nodes_randint> ::= RANDINT(2,100)
+
+<presort> ::= True | False | auto
+
+<alpha> ::= RANDFLOAT(0.0,9.0)
+
+<max_iter> ::= 10 | 100 | 500 | 1000
+
+<n_neighbors> ::= RANDINT(1,30)
+
+<weights> ::= weights:uniform | weights:distance
+
+<k_algorithm> ::= algorithm:auto | algorithm:brute | algorithm:kd_tree | algorithm:ball_tree
+
+<leaf_size> ::= RANDINT(5,100)
+
+<p> ::= RANDINT(1,15)
+
+<d_metric> ::= metric:euclidean | metric:manhattan | metric:chebyshev | metric:minkowski
+
+<radius> ::= RANDFLOAT(1.0,30.0)
+
+<shrinking_threshold> ::= shrink_threshold:<shrink_threshold_randfloat> | shrink_threshold:None
+
+<shrink_threshold_randfloat> ::= RANDFLOAT(0.0,30.0)
+
+<solver_discrim> ::= solver:svd | solver:lsqr
+
+<solver_lr_options> ::= solver:liblinear | solver:sag | solver:newton-cg | solver:lbfgs
+
+<max_iter_lr> ::= 10 | 100 | 150 | 300 | 350 | 400 | 450 |500
+
+<cv> ::= cv:<cv_randint> | cv:None
+
+<cv_randint> ::= RANDINT(2,10)
+
+<loss_sgd> ::= loss:hinge| loss:squared_hinge
+
+<penalty> ::= penalty:l1 | penalty:l2
+
+<solver_ridge> ::= solver:auto | solver:svd | solver:cholesky | solver:lsqr | solver:sparse_cg | solver:sag
+
+<algorithm_ada> ::= algorithm:SAMME.R | algorithm:SAMME
+
+<n_estimators> ::=  5 | 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50
+
+<learning_rate_ada> ::= RANDFLOAT(0.01,2.0)
+
+<loss_gradient> ::= loss:deviance | loss:exponential
+
+<lr_gradient_boosting> ::= RANDFLOAT(0.0000000001,0.1)
+
+<bootstrap_and_oob> ::= bootstrap:True  oob_score:<boolean> | bootstrap:False oob_score:False
+
+<class_weight_Trees> ::= class_weight:balanced | class_weight:balanced_subsample | class_weight:None
