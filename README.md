@@ -5,6 +5,6 @@
 To run the module:
 
 1. Navigate to the `sge` folder.
-2. Run the following command: `python3 examples.ensemble_ml`
+2. Run the following command: `python3 -m examples.ensemble_ml`
 
 To change parameters, navigate to `sge/sge/parameters.py`.
