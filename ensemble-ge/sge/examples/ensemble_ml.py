@@ -141,22 +141,6 @@ class EnsembleML():
 
         try:
             # print("IN-1")
-            rf_classifier = RandomForestClassifier(random_state=42)
-            gb_classifier = GradientBoostingClassifier(random_state=42)
-            lr_classifier = LogisticRegression(random_state=42)
-
-            # Create an ensemble pipeline using VotingClassifier
-            ensemble_pipeline = make_pipeline(
-                StandardScaler(),
-                VotingClassifier(
-                    estimators=[
-                        ('random_forest', rf_classifier),
-                        ('gradient_boosting', gb_classifier),
-                        ('logistic_regression', lr_classifier)
-                    ],
-                    voting='soft'  # You can use 'hard' or 'soft' voting strategy
-                )
-            )
             # print(ensemble_pipeline)
             # print(pipeline)
             cv = StratifiedKFold(n_splits=3, shuffle=True)
