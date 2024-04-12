@@ -9,38 +9,31 @@ def evolution_progress(generation, pop):
     # print(generation)
     # print(pop)
     fitness_samples = [i['fitness'] for i in pop]
+    print(fitness_samples)
     val1 = [i['other_info'] for i in pop]
     f1score_test = []
     f1score_val = []
-    # print(val[0]['f1score_val'])
-    # f1score_val = [val1[i]['f1score_val'] for i in range(len(val1))]
-    # print(val1[0])
-    # print(val1[1])
     for i in val1:
         if i['invalid'] == 0:
             f1score_val.append(i['f1score_val'])
             f1score_test.append(i['f1score_test'])
     # f1score_val = val1[0]['f1score_val']
     # f1score_test = val1[0]['f1score_test']
-
-    # y = []
-    # # print(f1score_val)
-    # for x in f1score_val:
-    #     y.append(x['f1score_val'])
-    # print(y)
-    # f1score_test = [i['other_info']['f1score_test'] for i in pop]
+    if f1score_val:
+        max_f1score_val = np.max(f1score_val)
+    else:
+        max_f1score_val = -1  # or any default value you prefer
     # data = '%4d\t%.6e\t%.6e\t%.6e' % (generation, np.min(fitness_samples), np.mean(fitness_samples), np.std(fitness_samples))
     data = '%4d\t%.6e\t%.6e\t%.6e\t%.4f\t%.4f\t%.4f\t%.4f' % (
     generation, 
     np.min(fitness_samples), 
     np.mean(fitness_samples), 
     np.std(fitness_samples),
-    np.max(f1score_val),
+    max_f1score_val,
     np.mean(f1score_val),
     np.max(f1score_test),
     np.mean(f1score_test)
 )
-
     if params['VERBOSE']:
         print(data)
     save_progress_to_file(data)
