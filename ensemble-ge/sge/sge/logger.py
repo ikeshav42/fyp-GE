@@ -1,22 +1,26 @@
+import math
 import numpy as np
 from sge.parameters import params
 import json
 import os
 
 
-
 def evolution_progress(generation, pop):
     # print(generation)
     # print(pop)
-    fitness_samples = [i['fitness'] for i in pop]
+    fitness_samples = [i['fitness'] for i in pop if not math.isnan(i['fitness'])]
     print(fitness_samples)
     val1 = [i['other_info'] for i in pop]
+    # val1 = [i['other_info'] for i in pop if isinstance(i['other_info'], (int, float)) and not math.isnan(i['other_info'])]
     f1score_test = []
     f1score_val = []
     for i in val1:
         if i['invalid'] == 0:
             f1score_val.append(i['f1score_val'])
             f1score_test.append(i['f1score_test'])
+            # f1score_val = [i.get('f1score_val', None) for i in pop if isinstance(i.get('f1score_val', None), (int, float))]
+            # f1score_test = [i.get('f1score_test', None) for i in pop if isinstance(i.get('f1score_test', None), (int, float))]
+
     # f1score_val = val1[0]['f1score_val']
     # f1score_test = val1[0]['f1score_test']
     if f1score_val:
