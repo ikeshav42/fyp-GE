@@ -19,7 +19,7 @@ import pmlb
 
 
 KEYWORDS = ['preprocessing', 'classifier','ensemble',]  # Added 'ensemble' to the list of keywords
-TIMEOUT = 5*60
+TIMEOUT = 15*60
 
 def exec_timeout(func, args, timeout):
     # print(args)
@@ -144,9 +144,10 @@ class EnsembleML():
             # print(ensemble_pipeline)
             # print(pipeline)
             cv = StratifiedKFold(n_splits=3, shuffle=True)
-            X, y = pmlb.fetch_data('breast_cancer', return_X_y=True)
+            X, y = pmlb.fetch_data('wine_quality_white', return_X_y=True)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
             scores = cross_val_score(pipeline, X_train, y_train, cv=cv, scoring='f1_weighted')
+            scores = [0 if np.isnan(score) else score for score in scores]
             # print(f'scores = {scores}')
         except ValueError as ve:
             # print(pipeline)
